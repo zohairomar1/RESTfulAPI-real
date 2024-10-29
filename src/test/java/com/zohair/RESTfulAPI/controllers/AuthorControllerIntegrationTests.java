@@ -4,6 +4,7 @@ package com.zohair.RESTfulAPI.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zohair.RESTfulAPI.TestDataUtil;
 import com.zohair.RESTfulAPI.domain.entities.AuthorEntity;
+import com.zohair.RESTfulAPI.services.AuthorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,16 @@ import javax.swing.*;
 @AutoConfigureMockMvc // create mockmvc instances and place into application context
 public class AuthorControllerIntegrationTests {
 
+    private AuthorService authorService;
+
     private ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
 
     @Autowired
-    public AuthorControllerIntegrationTests(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public AuthorControllerIntegrationTests(MockMvc mockMvc, AuthorService authorService) {
+        this.authorService = authorService;
+        this.objectMapper =  new ObjectMapper();
         this.mockMvc = mockMvc;
     }
 
@@ -65,6 +69,37 @@ public class AuthorControllerIntegrationTests {
                         MockMvcResultMatchers.jsonPath("$.name").value(testAuthor.getName())
                 ).andExpect(
                         MockMvcResultMatchers.jsonPath("$.age").value(testAuthor.getAge())
+                );
+    }
+
+    @Test
+    public void testThatListAuthorReturnsHttp200() throws Exception {
+
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/authors")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                );
+    }
+
+    @Test
+    public void testThatListAuthorReturnsListOfAuthors() throws Exception {
+
+        AuthorEntity testAuthor = TestDataUtil.createTestAuthorA();
+        authorService.createAuthor(testAuthor);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/authors")
+                                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$[0].id").isNumber() // id is generated automatically in jpa
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$[0].name").value(testAuthor.getName())
+                ).andExpect(
+                        MockMvcResultMatchers.jsonPath("$[0].age").value(testAuthor.getAge())
                 );
     }
 }
