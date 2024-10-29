@@ -82,4 +82,5 @@ public class AuthorEntityRepositoryIntegrationTests {
         assertThat(result).isNotPresent();
     }
 
+
 }
