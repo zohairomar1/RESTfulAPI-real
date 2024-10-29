@@ -1,5 +1,7 @@
 package com.zohair.RESTfulAPI;
 
+import com.zohair.RESTfulAPI.domain.dto.AuthorDto;
+import com.zohair.RESTfulAPI.domain.dto.BookDto;
 import com.zohair.RESTfulAPI.domain.entities.BookEntity;
 import com.zohair.RESTfulAPI.domain.entities.AuthorEntity;
 
@@ -53,6 +55,14 @@ public final class TestDataUtil {
                 .isbn("978-1-2345-6789-2")
                 .title("The Last Ember")
                 .authorEntity(authorEntity)
+                .build();
+    }
+
+    public static BookDto createTestDtoA(final AuthorDto authorDto) {
+        return BookDto.builder()
+                .isbn("978-1-2345-6789-0")
+                .title("The Shadow in the Attic")
+                .authorDto(authorDto)
                 .build();
     }
 }
