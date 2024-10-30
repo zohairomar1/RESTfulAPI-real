@@ -7,10 +7,10 @@ import com.zohair.RESTfulAPI.services.BookService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class BookController {
@@ -29,6 +29,15 @@ public class BookController {
         BookEntity bookEntity = bookMapper.mapFrom(bookDto);
         BookEntity savedBook = bookService.createBook(isbn, bookEntity);
         return new ResponseEntity<>(bookMapper.mapTo(savedBook),HttpStatus.CREATED);
+    }
+
+    @GetMapping("books")
+    public List<BookDto> listBooks() {
+        List<BookEntity> books = bookService.findAll();
+        return books
+                .stream()
+                .map(bookMapper::mapTo)
+                .collect(Collectors.toList());
     }
 
 }
