@@ -128,4 +128,54 @@ public class BookControllerIntegrationTests {
                 );
 
     }
+
+    @Test
+    public void testThatUpdateBookReturnsHttpStatus200InsteadOf201Created() throws Exception {
+
+        BookEntity bookEntity = TestDataUtil.createTestBookA(null);
+        bookService.createBook(bookEntity.getIsbn(), bookEntity);
+
+        BookDto bookDto = TestDataUtil.createTestDtoA(null);
+        bookDto.setTitle(bookEntity.getTitle() + " Updated");
+        String createBookJson = objectMapper.writeValueAsString(bookDto);
+
+
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/books/978-1-2345-6789-0")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(createBookJson))
+                .andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                );
+
+    }
+
+    @Test
+    public void testThatUpdateBookUpdatesBook() throws Exception {
+
+        BookEntity bookEntity = TestDataUtil.createTestBookA(null);
+        bookService.createBook(bookEntity.getIsbn(), bookEntity);
+
+        BookDto bookDto = TestDataUtil.createTestDtoA(null);
+        bookDto.setTitle(bookEntity.getTitle() + " Updated");
+        bookDto.setIsbn("not actual isbn");
+        String createBookJson = objectMapper.writeValueAsString(bookDto);
+
+
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/books/978-1-2345-6789-0")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(createBookJson))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.isbn").value(bookEntity.getIsbn())
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.title").value(bookDto.getTitle())
+                );
+
+    }
+
+
 }
