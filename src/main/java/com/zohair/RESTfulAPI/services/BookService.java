@@ -12,4 +12,6 @@ public interface BookService {
     List<BookEntity> findAll();
 
     Optional<BookEntity> findOne(String isbn);
+
+    boolean doesExist(String isbn);
 }
