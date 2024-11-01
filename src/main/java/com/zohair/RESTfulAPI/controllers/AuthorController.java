@@ -3,6 +3,7 @@ package com.zohair.RESTfulAPI.controllers;
 import com.zohair.RESTfulAPI.domain.dto.AuthorDto;
 import com.zohair.RESTfulAPI.domain.entities.AuthorEntity;
 import com.zohair.RESTfulAPI.mappers.Mapper;
+import com.zohair.RESTfulAPI.repositories.AuthorRepository;
 import com.zohair.RESTfulAPI.services.AuthorService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -16,12 +17,14 @@ import java.util.stream.Collectors;
 @RestController
 public class AuthorController {
 
+    private final AuthorRepository authorRepository;
     private AuthorService authorService;
     private Mapper<AuthorEntity,AuthorDto> authorMapper;
 
-    public AuthorController(AuthorService authorService, Mapper<AuthorEntity,AuthorDto> authorMapper) {
+    public AuthorController(AuthorService authorService, Mapper<AuthorEntity,AuthorDto> authorMapper, AuthorRepository authorRepository) {
         this.authorMapper = authorMapper;
         this.authorService = authorService;
+        this.authorRepository = authorRepository;
     }
 
     @PostMapping(path="/authors")
@@ -45,5 +48,21 @@ public class AuthorController {
             AuthorDto authorDto = authorMapper.mapTo(authorEntity);
             return new ResponseEntity<>(authorDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping(path="/authors/{id}")
+    public ResponseEntity<AuthorDto> updateAuthor(@PathVariable("id") Long id, @RequestBody AuthorDto author) {
+        if (!authorService.doesExist(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        } else {
+
+            author.setId(id);
+            AuthorEntity authorEntity = authorMapper.mapFrom(author);
+            AuthorEntity savedAuthorEntity = authorService.createAuthor(authorEntity);
+            return new ResponseEntity<>
+                    (authorMapper.mapTo(savedAuthorEntity)
+                    , HttpStatus.OK);
+        }
     }
 }
