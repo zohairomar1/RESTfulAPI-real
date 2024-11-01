@@ -38,4 +38,14 @@ public class AuthorServiceImpl implements AuthorService {
     public Optional<AuthorEntity> findOne(Long id) {
         return authorRepository.findById(id);
     }
+
+    @Override
+    public AuthorEntity updateAuthor(AuthorEntity authorEntity) {
+        return authorRepository.save(authorEntity);
+    }
+
+    @Override
+    public boolean doesExist(Long id) {
+        return authorRepository.existsById(id);
+    }
 }
