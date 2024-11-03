@@ -5,6 +5,8 @@ import com.zohair.RESTfulAPI.domain.entities.AuthorEntity;
 import com.zohair.RESTfulAPI.mappers.Mapper;
 import com.zohair.RESTfulAPI.repositories.AuthorRepository;
 import com.zohair.RESTfulAPI.services.AuthorService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +38,9 @@ public class AuthorController {
     }
 
     @GetMapping(path = "/authors")
-    public List<AuthorDto> listAuthors() {
-        List<AuthorEntity> authors = authorService.findAll();
-        return authors.stream().map(authorMapper::mapTo).collect(Collectors.toList());
+    public Page<AuthorDto> listAuthors(Pageable pageable) {
+        Page<AuthorEntity> authors = authorService.findAll(pageable);
+        return authors.map(authorMapper::mapTo);
     }
 
     @GetMapping(path = "/authors/{id}")
