@@ -243,7 +243,7 @@ public class AuthorControllerIntegrationTests {
         String authorJson = objectMapper.writeValueAsString(authorEntity);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.put("/authors/99")
+                        MockMvcRequestBuilders.patch("/authors/99")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(authorJson))
                 .andExpect(
@@ -260,7 +260,7 @@ public class AuthorControllerIntegrationTests {
         String authorJson = objectMapper.writeValueAsString(authorEntity);
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.put("/authors/1")
+                        MockMvcRequestBuilders.patch("/authors/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(authorJson))
 
