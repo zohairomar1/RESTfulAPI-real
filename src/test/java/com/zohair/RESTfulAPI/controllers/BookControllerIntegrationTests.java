@@ -93,11 +93,11 @@ public class BookControllerIntegrationTests {
                         MockMvcRequestBuilders.get("/books")
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$[0].isbn").value(testBookA.getIsbn())
+                        MockMvcResultMatchers.jsonPath("$.content[0].isbn").value(testBookA.getIsbn())
                 ).andExpect(
-                        MockMvcResultMatchers.jsonPath("$[0].author").doesNotExist()
+                        MockMvcResultMatchers.jsonPath("$.content[0].author").doesNotExist()
                 ).andExpect(
-                        MockMvcResultMatchers.jsonPath("$[0].title").value(testBookA.getTitle())
+                        MockMvcResultMatchers.jsonPath("$.content[0].title").value(testBookA.getTitle())
                 );
 
     }

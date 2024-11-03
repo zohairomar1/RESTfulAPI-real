@@ -93,11 +93,11 @@ public class AuthorControllerIntegrationTests {
                                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(
-                        MockMvcResultMatchers.jsonPath("$[0].id").isNumber() // id is generated automatically in jpa
+                        MockMvcResultMatchers.jsonPath("$.content[0].id").isNumber() // id is generated automatically in jpa
                 ).andExpect(
-                        MockMvcResultMatchers.jsonPath("$[0].name").value(testAuthor.getName())
+                        MockMvcResultMatchers.jsonPath("$.content[0].name").value(testAuthor.getName())
                 ).andExpect(
-                        MockMvcResultMatchers.jsonPath("$[0].age").value(testAuthor.getAge())
+                        MockMvcResultMatchers.jsonPath("$.content[0].age").value(testAuthor.getAge())
                 );
     }
 
