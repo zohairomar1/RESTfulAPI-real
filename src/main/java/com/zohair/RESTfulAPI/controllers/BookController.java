@@ -77,7 +77,7 @@ public class BookController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping
+    @DeleteMapping("books/{isbn}")
     public ResponseEntity deleteBook(@PathVariable("isbn") String isbn) {
         if (!bookService.doesExist(isbn)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
