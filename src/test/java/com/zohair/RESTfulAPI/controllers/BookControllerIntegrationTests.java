@@ -37,6 +37,7 @@ public class BookControllerIntegrationTests {
 
     @Test
     public void testThatCreateBookReturnsHttpStatus201Created() throws Exception {
+
         BookDto bookDto = TestDataUtil.createTestDtoA(null);
         String createBookJson = objectMapper.writeValueAsString(bookDto);
 
@@ -173,6 +174,62 @@ public class BookControllerIntegrationTests {
                 )
                 .andExpect(
                         MockMvcResultMatchers.jsonPath("$.title").value(bookDto.getTitle())
+                );
+
+    }
+
+    @Test
+    public void testThatPartialUpdateBookReturnsHttpStatus200WhenBookExists() throws Exception {
+
+        BookEntity bookEntity = TestDataUtil.createTestBookA(null);
+        bookService.createBook(bookEntity.getIsbn(), bookEntity);
+        bookEntity.setTitle("Updated");
+        String createBookJson = objectMapper.writeValueAsString(bookEntity);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/books/978-1-2345-6789-0")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(createBookJson))
+                .andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                );
+
+    }
+
+    @Test
+    public void testThatPartialUpdateBookReturnsHttpStatus404WhenBookDoesNotExist() throws Exception {
+
+        BookEntity bookEntity = TestDataUtil.createTestBookA(null);
+        bookService.createBook(bookEntity.getIsbn(), bookEntity);
+        bookEntity.setTitle("Updated");
+        String createBookJson = objectMapper.writeValueAsString(bookEntity);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/books/5555")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(createBookJson))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNotFound()
+                );
+
+    }
+    @Test
+    public void testThatPartialUpdateBookUpdatesTitleWhenBookExists() throws Exception {
+
+        BookEntity bookEntity = TestDataUtil.createTestBookA(null);
+        bookService.createBook(bookEntity.getIsbn(), bookEntity);
+        bookEntity.setTitle("Updated");
+        String createBookJson = objectMapper.writeValueAsString(bookEntity);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/books/978-1-2345-6789-0")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(createBookJson))
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.isbn").value(bookEntity.getIsbn())
+                )
+                .andExpect(
+                        MockMvcResultMatchers.jsonPath("$.title").value("Updated")
                 );
 
     }
