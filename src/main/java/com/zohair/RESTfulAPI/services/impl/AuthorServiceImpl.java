@@ -4,6 +4,8 @@ package com.zohair.RESTfulAPI.services.impl;
 import com.zohair.RESTfulAPI.domain.entities.AuthorEntity;
 import com.zohair.RESTfulAPI.repositories.AuthorRepository;
 import com.zohair.RESTfulAPI.services.AuthorService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +34,11 @@ public class AuthorServiceImpl implements AuthorService {
                 .spliterator(),
                 false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<AuthorEntity> findAll(Pageable pageable) {
+        return authorRepository.findAll(pageable);
     }
 
     @Override
@@ -64,4 +71,5 @@ public class AuthorServiceImpl implements AuthorService {
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }
+
 }
