@@ -201,6 +201,7 @@ public class BookControllerIntegrationTests {
 
         BookEntity bookEntity = TestDataUtil.createTestBookA(null);
         bookService.createBook(bookEntity.getIsbn(), bookEntity);
+
         bookEntity.setTitle("Updated");
         String createBookJson = objectMapper.writeValueAsString(bookEntity);
 
@@ -234,5 +235,30 @@ public class BookControllerIntegrationTests {
 
     }
 
+    @Test
+    public void testThatDeleteBookReturnsHTTP204WhenBookExists() throws Exception {
 
+        BookEntity bookEntity = TestDataUtil.createTestBookA(null);
+        bookService.createBook(bookEntity.getIsbn(), bookEntity);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/books/" + bookEntity.getIsbn())
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNoContent()
+                );
+
+    }
+
+    @Test
+    public void testThatDeleteBookReturnsHTTP404WhenBookDoesNotExist() throws Exception {
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/books/999")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNotFound()
+                );
+
+    }
 }
