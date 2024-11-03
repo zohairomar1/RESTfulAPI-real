@@ -53,4 +53,8 @@ public class BookServiceImpl implements BookService {
         }).orElseThrow(() -> new RuntimeException("Book not found"));
     }
 
+    @Override
+    public void deleteBook(String isbn) {
+        bookRepository.deleteById(isbn);
+    }
 }

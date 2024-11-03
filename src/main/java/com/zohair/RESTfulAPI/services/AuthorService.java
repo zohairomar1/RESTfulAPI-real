@@ -18,4 +18,6 @@ public interface AuthorService {
     AuthorEntity updateAuthor(AuthorEntity authorEntity);
 
     AuthorEntity partialUpdate(Long id, AuthorEntity authorEntity);
+
+    void deleteAuthor(Long id);
 }
